@@ -14,7 +14,8 @@ class LambdaMultiplatDemStack(Stack):
             self, 
             "MyDifferentPlatformFn",
             code=aws_lambda.DockerImageCode.from_image_asset(
-              "."
+              ".",
+              platform=ecr.Platform.LINUX_ARM64
             ),
             architecture=aws_lambda.Architecture.ARM_64
         )
