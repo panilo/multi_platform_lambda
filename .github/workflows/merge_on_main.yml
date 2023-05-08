@@ -1,0 +1,33 @@
+name: Deploy my Function
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest    
+    name: Deploy
+    steps:
+      - uses: actions/checkout@v3  
+      - name: Install Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9" 
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "18"
+      - name: install dependencies
+        run: |
+          npm install -g aws-cdk  
+          pip install -r requirements.txt
+          pip install -r requirements-dev.txt              
+      - name: Configure AWS
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}      
+      - run: |          
+          cdk deploy "*" --ci --require-approval never

@@ -1,1 +1,3 @@
-# multi_platform_lambda
+# DEMO Multi-Platform Lambda
+
+See https://dev.to/panilo
