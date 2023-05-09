@@ -30,4 +30,5 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ vars.AWS_REGION }}      
       - run: |          
+          docker run --privileged --rm tonistiigi/binfmt --install all
           cdk deploy "*" --ci --require-approval never
