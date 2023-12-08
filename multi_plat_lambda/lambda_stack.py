@@ -17,5 +17,5 @@ class LambdaMultiplatDemStack(Stack):
               ".",
               platform=ecr.Platform.LINUX_ARM64
             ),
-            architecture=aws_lambda.Architecture.ARM_64
+            architecture=aws_lambda.Architecture.ARM_64,
         )
