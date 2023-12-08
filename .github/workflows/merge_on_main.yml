@@ -6,14 +6,44 @@ on:
       - main
 
 jobs:
-  deploy:
+  deploy-dev:
     runs-on: ubuntu-latest    
     name: Deploy
+    environment: dev
     steps:
       - uses: actions/checkout@v3  
+
       - name: Install Requirements
-        uses: ./github/actions/setup-requirements
-      - name: Deploy on ...
-        uses: ./github/actions/deployment
+        uses: ./.github/actions/setup-requirements
+
+      - name: Deploy on Prod
+        uses: ./.github/actions/deployment
+
+  deploy-staging:
+    runs-on: ubuntu-latest    
+    name: Deploy
+    environment: staging
+    steps:
+      - uses: actions/checkout@v3  
+
+      - name: Install Requirements
+        uses: ./.github/actions/setup-requirements
+
+      - name: Deploy on Prod
+        uses: ./.github/actions/deployment
+  
+  deploy-prod:
+    runs-on: ubuntu-latest    
+    name: Deploy
+    environment: prod
+    steps:
+      - uses: actions/checkout@v3  
+
+      - name: Install Requirements
+        uses: ./.github/actions/setup-requirements
+
+      - name: Deploy on Prod
+        uses: ./.github/actions/deployment
+
 
   

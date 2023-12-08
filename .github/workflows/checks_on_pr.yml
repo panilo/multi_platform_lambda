@@ -1,0 +1,36 @@
+name: Run tests and analysis
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest    
+    name: Run test and analysis
+    steps:
+      - uses: actions/checkout@v3  
+      
+      - name: Install Requirements
+        uses: ./.github/actions/setup-requirements
+      
+      - name: Test
+        uses: ./.github/actions/test-analyse
+  deploy:
+    runs-on: ubuntu-latest    
+    name: Deploy on PR environment
+    steps:
+        - uses: actions/checkout@v3  
+        
+        - name: Install Requirements
+          uses: ./.github/actions/setup-requirements
+        
+        - name: Deploy PR environment
+          uses: ./.github/actions/deployment
+          with:
+            env_name: PR-${{ github.event.number }}
+            env_type: dev
+            aws_access_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            
+  
