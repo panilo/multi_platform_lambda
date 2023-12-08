@@ -1,0 +1,8 @@
+name: "Setup requirements"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Run python tests
+      run: |
+        pytest tests

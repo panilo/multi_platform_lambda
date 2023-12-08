@@ -1,0 +1,44 @@
+name: "Execute deployment"
+inputs: 
+  env_name: 
+    description: "Name of the environment."
+    required: true
+  env_type: 
+    description: "Type of the environment."
+    required: true
+  aws_region:
+    description: "The region to deploy to."
+    default: "eu-west-1"
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set AWS account id
+      run: |
+        if [[ ${{ inputs.env_type == dev }} ]]; then
+          echo "AWS_ACC_ID=123" >> $GITHUB_ENV
+        elif [[ ${{ inputs.env_type == staging }} ]]; then
+          echo "AWS_ACC_ID=456" >> $GITHUB_ENV
+        elif [[ ${{ inputs.env_type == prod }} ]]; then
+          echo "AWS_ACC_ID=789" >> $GITHUB_ENV
+        else 
+          echo "ENV_TYPE unknown, supported types are dev|staging|prod."
+      shell: bash
+    
+    - name: Configure AWS credentials (OIDC)
+      if: ${{ false == true }}
+      uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-region: ${{ inputs.aws_region }}
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACC_ID }}:role/MyDeploymentRole
+    
+    - name: Configure AWS credentials 
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ inputs.aws_region }}     
+
+    - name: Deploy 
+      run: cdk deploy "*" --ci --require-approval never
+      shell: bash
